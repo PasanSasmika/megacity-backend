@@ -2,6 +2,7 @@ package com.cabservice.MegaCity.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.cabservice.MegaCity.model.Driver;
@@ -16,10 +17,16 @@ public class DriverController {
     @Autowired
     private DriverService driverService;
 
+    
+     @Autowired
+        private PasswordEncoder passwordEncoder;
+
+
     // Create Driver
-    @PostMapping("/auth/create")
+    @PostMapping("/auth/createdriver")
     @ResponseStatus(HttpStatus.CREATED)
     public Driver createDriver(@RequestBody Driver driver) {
+        driver.setPassword(passwordEncoder.encode(driver.getPassword()));
         return driverService.createDriver(driver);
     }
 
