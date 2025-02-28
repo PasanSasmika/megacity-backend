@@ -34,7 +34,7 @@ public class CustomerController {
      * Retrieves all customers.
      * @return A list of all customers.
      */
-    @GetMapping
+    @GetMapping("/auth/allcustomers")
     public ResponseEntity<List<Customer>> getAllCustomers() {
         List<Customer> customers = customerService.findAll();
         return new ResponseEntity<>(customers, HttpStatus.OK);
