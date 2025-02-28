@@ -1,4 +1,6 @@
 package com.cabservice.MegaCity.controller;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,8 +35,13 @@ public class AdminController {
         return adminService.createAdmin(admin);
     }
 
-    @GetMapping("/auth/alladmins/{adminID}")
+    @GetMapping("/alladmins/{adminID}")
     public Admin getAdminId(@PathVariable String adminID) {
         return adminService.getAdminById(adminID);
+    }
+
+     @GetMapping("/alladmins")
+    public List<Admin> getAllAdmis() {
+        return adminService.getAllAdmis();
     }
 }

@@ -1,6 +1,8 @@
 package com.cabservice.MegaCity.service;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +21,9 @@ public class AdminService {
     }
     public Admin getAdminById(String adminID) {
         return adminRepository.findById(adminID).get();
+    }
+
+    public List<Admin> getAllAdmis() {
+        return adminRepository.findAll();
     }
 }
