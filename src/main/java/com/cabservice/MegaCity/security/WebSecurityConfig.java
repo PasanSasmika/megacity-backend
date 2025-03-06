@@ -23,7 +23,8 @@ import com.cabservice.MegaCity.security.Jwt.AuthTokenFilter;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
-        @Autowired
+
+    @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
@@ -31,25 +32,21 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-
         return userDetailsService;
     }
 
     @Bean
-    public AuthTokenFilter authenticAuthTokenFilter(){
-
+    public AuthTokenFilter authenticAuthTokenFilter() {
         return new AuthTokenFilter();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
@@ -57,13 +54,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
-
-         return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(request -> {
                 var corsConfig = new org.springframework.web.cors.CorsConfiguration();
@@ -75,12 +71,14 @@ public class WebSecurityConfig {
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated());
-    
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/**").permitAll() // Allow authentication endpoints
+                .requestMatchers("/api/category").permitAll() // Allow access to get all categories
+                .anyRequest().authenticated()); // Require authentication for other requests
+
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-    
+
         return http.build();
     }
 }

@@ -29,7 +29,10 @@ public class Driver {
     private String vehicalModel;
     private String vehicalSeats;
     private String imageUrl;
-
+    private String catType;
+    private String noOfSeats;
+    private String lagguageType;
+    private String pricePerKm;
 
    //iouihiu 
     private String catID;
