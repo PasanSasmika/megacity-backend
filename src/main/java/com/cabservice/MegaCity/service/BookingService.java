@@ -42,6 +42,9 @@ public class BookingService {
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
+    public List<Booking> getBookingsByDriverID(String driverID) {
+        return bookingRepository.findByDriverID(driverID);
+    }
 
     public void deleteBooking(String bookingId) {
         bookingRepository.deleteById(bookingId);

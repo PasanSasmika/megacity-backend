@@ -24,7 +24,12 @@ public class Booking {
     private String dropLocation;
     private LocalDate date; 
     private LocalTime time; 
+    private String customerName;
     private String customerID;
+    private String email;
+    private String phone;
+    private String distance;
+    private String total;
     private String driverID;
     private String bookingStatus;
 

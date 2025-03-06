@@ -79,6 +79,15 @@ public class BookingController {
         return ResponseEntity.ok(bookings);
     }
 
+    @GetMapping("/driver/{driverID}")
+    public ResponseEntity<List<Booking>> getBookingsByDriverID(@PathVariable String driverID) {
+        List<Booking> bookings = bookingService.getBookingsByDriverID(driverID);
+        if (bookings.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no bookings found
+        }
+        return ResponseEntity.ok(bookings); // Return 200 OK with the list of bookings
+    }
+
     /**
      * Deletes a booking by its ID.
      * @param bookingId The ID of the booking to delete.
