@@ -18,7 +18,6 @@ public class Category {
      @Id
     private String catID;
     private String catType;
-    private String catModel;
     private String noOfSeats;
     private String lagguageType;
     private String pricePerKm;
