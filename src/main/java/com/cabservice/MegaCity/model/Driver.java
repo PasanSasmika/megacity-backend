@@ -26,8 +26,8 @@ public class Driver {
     private String driverStatues;
     private String vehicalName;
     private String vehicalType;
-    private String vehicalModel;
     private String imageUrl;
+    private String licenceImg;
     private String catType;
     private String noOfSeats;
     private String lagguageType;

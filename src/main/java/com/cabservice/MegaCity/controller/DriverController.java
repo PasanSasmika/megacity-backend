@@ -27,17 +27,11 @@ public class DriverController {
      @Autowired
         private PasswordEncoder passwordEncoder;
 
-   // Create Driver
-//    @PostMapping("/auth/createdriver")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public Driver createDriver(@RequestBody Driver driver) {
-//        driver.setPassword(passwordEncoder.encode(driver.getPassword()));
-//        return driverService.createDriver(driver);
-//    }
     @PostMapping("/auth/createdriver")
     public ResponseEntity<String> createDriver(
         @RequestParam("imageUrl") MultipartFile imageUrl,
-        @RequestParam("vehicalName") String vehicalName, // Changed from carImageUrl
+        @RequestParam("licenceImg") MultipartFile licenceImg,
+        @RequestParam("vehicalName") String vehicalName, 
         @RequestParam("driverName") String driverName,
         @RequestParam("driverStatues") String driverStatues, 
         @RequestParam("driverEmail") String driverEmail,
@@ -46,7 +40,6 @@ public class DriverController {
         @RequestParam("driverAddress") String driverAddress,
         @RequestParam("driverPhone") String driverPhone,
         @RequestParam("vehicalType") String vehicalType,
-        @RequestParam("vehicalModel") String vehicalModel,
         @RequestParam("catType") String catType,
         @RequestParam("noOfSeats") String noOfSeats,
         @RequestParam("lagguageType") String lagguageType,
@@ -59,8 +52,8 @@ public class DriverController {
 
 
         // Upload driver photo to Cloudinary
-        String driverPhotoUrl = cloudinaryService.uploadImage(imageUrl);
-
+        String driverPhotoUrl = cloudinaryService.uploadImage(imageUrl); 
+        String licenceImgUrl = cloudinaryService.uploadImage(licenceImg);
 
         // Create and populate the Driver object
         Driver driver = new Driver();
@@ -68,6 +61,7 @@ public class DriverController {
         driver.setDriverEmail(driverEmail);
         driver.setUserName(userName);
         driver.setImageUrl(driverPhotoUrl);
+        driver.setImageUrl(licenceImgUrl);
         driver.setPassword(passwordEncoder.encode(password));
         driver.setDriverAddress(driverAddress);
         driver.setDriverPhone(driverPhone);
@@ -75,7 +69,6 @@ public class DriverController {
         driver.setCatType(catType);
         driver.setVehicalType(vehicalType);
         driver.setVehicalName(vehicalName);
-        driver.setVehicalModel(vehicalModel);
         driver.setNoOfSeats(noOfSeats);
         driver.setPricePerKm(pricePerKm);
         driver.setLagguageType(lagguageType);
