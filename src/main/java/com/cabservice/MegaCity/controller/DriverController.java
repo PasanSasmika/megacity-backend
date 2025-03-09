@@ -34,8 +34,8 @@ public class DriverController {
         @RequestParam("driverName") String driverName,
         @RequestParam("driverStatues") String driverStatues, 
         @RequestParam("driverEmail") String driverEmail,
-        @RequestParam("userName") String userName,
-        @RequestParam("password") String password,
+        @RequestParam(value = "userName", required = false) String userName, 
+        @RequestParam(value = "password", required = false) String password,
         @RequestParam("driverAddress") String driverAddress,
         @RequestParam("driverPhone") String driverPhone,
         @RequestParam("vehicalType") String vehicalType,
@@ -53,10 +53,8 @@ public class DriverController {
         Driver driver = new Driver();
         driver.setDriverName(driverName);
         driver.setDriverEmail(driverEmail);
-        driver.setUserName(userName);
         driver.setImageUrl(driverPhotoUrl);
         driver.setLicenceImg(licenceImgUrl);
-        driver.setPassword(passwordEncoder.encode(password));
         driver.setDriverAddress(driverAddress);
         driver.setDriverPhone(driverPhone);
         driver.setDriverStatues("Pending"); // Default status is Pending
@@ -67,6 +65,13 @@ public class DriverController {
         driver.setPricePerKm(pricePerKm);
         driver.setLagguageType(lagguageType);
 
+        if (userName != null) {
+            driver.setUserName(userName);
+        }
+        if (password != null) {
+            driver.setPassword(passwordEncoder.encode(password)); // Encode password if provided
+        }
+
         // Save driver
         String result = driverService.createDriver(driver);
         if (result.equals("Driver with this email already exists.")) {
@@ -74,6 +79,26 @@ public class DriverController {
         }
         return ResponseEntity.ok(result);
     }
+
+    
+@PostMapping("/auth/setcredentials/{driverID}")
+public ResponseEntity<String> setDriverCredentials(
+        @PathVariable String driverID,
+        @RequestParam String userName,
+        @RequestParam String password) {
+
+    // Retrieve the existing driver
+    Driver existingDriver = driverService.getDriverByID(driverID);
+    
+    // Update username and encode password
+    existingDriver.setUserName(userName);
+    existingDriver.setPassword(passwordEncoder.encode(password));
+    
+    // Save the updated driver using the existing updateDriver method
+    driverService.updateDriver(driverID, existingDriver);
+    
+    return ResponseEntity.ok("Driver credentials updated successfully.");
+}
 
     // Get Driver by ID
     @GetMapping("/{driverID}")
@@ -88,7 +113,7 @@ public class DriverController {
     }
 
     // Delete Driver by ID
-    @DeleteMapping("/{driverID}")
+    @DeleteMapping("/auth/deletedriver/{driverID}")
     public String deleteDriver(@PathVariable String driverID) {
         return driverService.deleteDriverByID(driverID);
     }
@@ -104,4 +129,5 @@ public class DriverController {
     public Driver updateDriver(@PathVariable String driverID, @RequestBody Driver updatedDriver) {
         return driverService.updateDriver(driverID, updatedDriver);
     }
+    
 }
