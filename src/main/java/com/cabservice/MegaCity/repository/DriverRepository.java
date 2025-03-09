@@ -9,10 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.cabservice.MegaCity.model.Driver;
 
 @Repository
-public interface DriverRepository extends MongoRepository<Driver , String> {
+public interface DriverRepository extends MongoRepository<Driver, String> {
     Optional<Driver> findByUserName(String userName);
+    Optional<Driver> findByDriverEmail(String driverEmail); // Check if email exists
     List<Driver> findByCatID(String catID);
-    
-} 
-  
-
+}

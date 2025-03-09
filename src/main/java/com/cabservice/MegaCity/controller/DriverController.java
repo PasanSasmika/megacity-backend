@@ -12,20 +12,19 @@ import com.cabservice.MegaCity.service.DriverService;
 
 import java.io.IOException;
 import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
-
 public class DriverController {
 
     @Autowired
     private DriverService driverService;
 
     @Autowired
-        private CloudinaryService cloudinaryService;
+    private CloudinaryService cloudinaryService;
 
-    
-     @Autowired
-        private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/auth/createdriver")
     public ResponseEntity<String> createDriver(
@@ -44,12 +43,7 @@ public class DriverController {
         @RequestParam("noOfSeats") String noOfSeats,
         @RequestParam("lagguageType") String lagguageType,
         @RequestParam("pricePerKm") String pricePerKm
-
-        
     ) throws IOException {
-
-        
-
 
         // Upload driver photo to Cloudinary
         String driverPhotoUrl = cloudinaryService.uploadImage(imageUrl); 
@@ -61,7 +55,7 @@ public class DriverController {
         driver.setDriverEmail(driverEmail);
         driver.setUserName(userName);
         driver.setImageUrl(driverPhotoUrl);
-        driver.setImageUrl(licenceImgUrl);
+        driver.setLicenceImg(licenceImgUrl);
         driver.setPassword(passwordEncoder.encode(password));
         driver.setDriverAddress(driverAddress);
         driver.setDriverPhone(driverPhone);
@@ -72,10 +66,13 @@ public class DriverController {
         driver.setNoOfSeats(noOfSeats);
         driver.setPricePerKm(pricePerKm);
         driver.setLagguageType(lagguageType);
-       
+
         // Save driver
-        driverService.createDriver(driver);
-        return ResponseEntity.ok("Driver account created successfully.");
+        String result = driverService.createDriver(driver);
+        if (result.equals("Driver with this email already exists.")) {
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
     // Get Driver by ID

@@ -14,8 +14,13 @@ public class DriverService {
     private DriverRepository driverRepository;
 
     // Create Driver
-    public Driver createDriver(Driver driver) {
-        return driverRepository.save(driver);
+    public String createDriver(Driver driver) {
+        // Check if the email already exists
+        if (driverRepository.findByDriverEmail(driver.getDriverEmail()).isPresent()) {
+            return "Driver with this email already exists.";
+        }
+        driverRepository.save(driver);
+        return "Driver account created successfully.";
     }
 
     // Get Driver By ID
