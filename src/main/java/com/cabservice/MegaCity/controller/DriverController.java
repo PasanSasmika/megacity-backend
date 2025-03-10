@@ -57,7 +57,7 @@ public class DriverController {
         driver.setLicenceImg(licenceImgUrl);
         driver.setDriverAddress(driverAddress);
         driver.setDriverPhone(driverPhone);
-        driver.setDriverStatues("Pending"); // Default status is Pending
+        driver.setDriverStatues("Pending");
         driver.setCatType(catType);
         driver.setVehicalType(vehicalType);
         driver.setVehicalName(vehicalName);
@@ -99,6 +99,27 @@ public ResponseEntity<String> setDriverCredentials(
     
     return ResponseEntity.ok("Driver credentials updated successfully.");
 }
+
+@PostMapping("/auth/setdriverStatues/{driverID}")
+public ResponseEntity<String> setDriverCredentials(
+        @PathVariable String driverID,
+        @RequestParam String driverStatues
+        ) {
+
+    // Retrieve the existing driver
+    Driver existingDriver = driverService.getDriverByID(driverID);
+    
+    // Update username and encode password
+    existingDriver.setDriverStatues(driverStatues);
+    
+    // Save the updated driver using the existing updateDriver method
+    driverService.updateDriver(driverID, existingDriver);
+    
+    return ResponseEntity.ok("Driver credentials updated successfully.");
+}
+
+
+
 
     // Get Driver by ID
     @GetMapping("/{driverID}")
