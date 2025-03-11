@@ -2,6 +2,7 @@ package com.cabservice.MegaCity.controller;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +46,11 @@ public class AuthController {
 
     return new LoginResponse(jwtToken, role, userId);
 }
+
+@PostMapping("/auth/logout")
+public ResponseEntity<?> logout() {
+    
+    SecurityContextHolder.clearContext();
+    return ResponseEntity.ok("Logged out successfully");
 }
-//
+}
