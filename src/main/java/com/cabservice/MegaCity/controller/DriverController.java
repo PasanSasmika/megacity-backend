@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cabservice.MegaCity.model.Driver;
 import com.cabservice.MegaCity.service.CloudinaryService;
 import com.cabservice.MegaCity.service.DriverService;
+import com.cabservice.MegaCity.service.EmailService;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +26,9 @@ public class DriverController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/auth/createdriver")
     public ResponseEntity<String> createDriver(
@@ -96,6 +100,15 @@ public ResponseEntity<String> setDriverCredentials(
     
     // Save the updated driver using the existing updateDriver method
     driverService.updateDriver(driverID, existingDriver);
+
+    // Send email to the driver with their new credentials
+    try {
+        emailService.sendApprovalEmail(existingDriver.getDriverEmail(), userName, password);
+    } catch (Exception e) {
+        // Log the error and continue
+        System.err.println("Failed to send email: " + e.getMessage());
+        e.printStackTrace();
+    }
     
     return ResponseEntity.ok("Driver credentials updated successfully.");
 }
