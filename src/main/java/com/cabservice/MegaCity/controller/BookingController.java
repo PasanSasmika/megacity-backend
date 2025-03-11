@@ -24,45 +24,52 @@ import com.cabservice.MegaCity.service.BookingService;
 public class BookingController {
     
     
-   @Autowired
+    @Autowired
     private BookingService bookingService;
 
     /**
      * Creates a new booking.
+     *
      * @param booking The booking details from the request body.
      * @return The created booking wrapped in a ResponseEntity.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        Booking createdBooking = bookingService.createBooking(booking);
-        return ResponseEntity.ok(createdBooking);
+    public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
+        try {
+            Booking createdBooking = bookingService.createBooking(booking);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdBooking);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     /**
      * Updates an existing booking.
-     * @param bookingId The ID of the booking to be updated.
+     *
+     * @param bookingId      The ID of the booking to update.
      * @param bookingDetails The updated booking details from the request body.
      * @return The updated booking if found, otherwise returns 404 Not Found.
      */
-
-     
     @PutMapping("/{id}")
-    public ResponseEntity<Booking> updateBooking(@PathVariable("id") String bookingId, @RequestBody Booking bookingDetails) {
-        Booking updatedBooking = bookingService.updateBooking(bookingId, bookingDetails);
-        if (updatedBooking != null) {
-            return ResponseEntity.ok(updatedBooking);
+    public ResponseEntity<?> updateBooking(@PathVariable("id") String bookingId, @RequestBody Booking bookingDetails) {
+        try {
+            Booking updatedBooking = bookingService.updateBooking(bookingId, bookingDetails);
+            if (updatedBooking != null) {
+                return ResponseEntity.ok(updatedBooking);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-        return ResponseEntity.notFound().build(); // Return 404 if not found
     }
 
     /**
      * Retrieves a booking by its ID.
+     *
      * @param bookingId The ID of the booking to retrieve.
      * @return The booking details if found, otherwise returns 404 Not Found.
      */
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingById(@PathVariable("id") String bookingId) {
         Optional<Booking> booking = bookingService.getBookingById(bookingId);
@@ -71,6 +78,7 @@ public class BookingController {
 
     /**
      * Retrieves all bookings.
+     *
      * @return A list of all bookings.
      */
     @GetMapping
@@ -79,23 +87,30 @@ public class BookingController {
         return ResponseEntity.ok(bookings);
     }
 
+    /**
+     * Retrieves all bookings for a specific driver.
+     *
+     * @param driverID The ID of the driver.
+     * @return A list of bookings for the driver, or 204 No Content if no bookings are found.
+     */
     @GetMapping("/driver/{driverID}")
     public ResponseEntity<List<Booking>> getBookingsByDriverID(@PathVariable String driverID) {
         List<Booking> bookings = bookingService.getBookingsByDriverID(driverID);
         if (bookings.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Return 204 No Content if no bookings found
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(bookings); // Return 200 OK with the list of bookings
+        return ResponseEntity.ok(bookings);
     }
 
     /**
      * Deletes a booking by its ID.
+     *
      * @param bookingId The ID of the booking to delete.
      * @return A 204 No Content response if successful.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable("id") String bookingId) {
         bookingService.deleteBooking(bookingId);
-        return ResponseEntity.noContent().build(); // Return 204 No Content
+        return ResponseEntity.noContent().build();
     }
 }
