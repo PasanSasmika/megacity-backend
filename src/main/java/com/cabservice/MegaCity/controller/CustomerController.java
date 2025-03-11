@@ -84,7 +84,7 @@ public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
      * @param id The ID of the customer to delete.
      * @return A 204 No Content response if the deletion is successful.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/auth/deletecustomer/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable String id) {
         customerService.delete(id);
         return ResponseEntity.noContent().build();
