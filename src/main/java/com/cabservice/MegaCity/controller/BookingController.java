@@ -81,7 +81,7 @@ public class BookingController {
      *
      * @return A list of all bookings.
      */
-    @GetMapping
+    @GetMapping("/allbooking")
     public ResponseEntity<List<Booking>> getAllBookings() {
         List<Booking> bookings = bookingService.getAllBookings();
         return ResponseEntity.ok(bookings);
