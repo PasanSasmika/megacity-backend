@@ -87,4 +87,73 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+
+
+    public void sendAcceptEmail(String to, String customerName, String pickupLocation, String dropLocation, String distance, String total) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom("pasansasmika333@gmail.com");
+            helper.setTo(to);
+            helper.setSubject("Booking Confirmed - Megacity Cab Services");
+    
+            String htmlContent = constructAcceptEmailHtml(customerName, pickupLocation, dropLocation, distance, total);
+            helper.setText(htmlContent, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void sendCancelEmail(String to, String customerName, String pickupLocation, String dropLocation) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom("pasansasmika333@gmail.com");
+            helper.setTo(to);
+            helper.setSubject("Booking Cancelled - Megacity Cab Services");
+    
+            String htmlContent = constructCancelEmailHtml(customerName, pickupLocation, dropLocation);
+            helper.setText(htmlContent, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private String constructAcceptEmailHtml(String customerName, String pickup, String drop, String distance, String total) {
+        return "<html><head><style>" +
+            "body { font-family: Arial, sans-serif; }" +
+            ".container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }" +
+            ".header { color: #4CAF50; font-size: 24px; margin-bottom: 20px; }" +
+            ".details { margin: 15px 0; }" +
+            "</style></head>" +
+            "<body><div class='container'>" +
+            "<h2 class='header'>Booking Confirmed</h2>" +
+            "<p>Dear " + customerName + ",</p>" +
+            "<p>Your booking has been accepted. Details:</p>" +
+            "<div class='details'>" +
+            "<p><strong>Pickup:</strong> " + pickup + "</p>" +
+            "<p><strong>Drop:</strong> " + drop + "</p>" +
+            "<p><strong>Distance:</strong> " + distance + "</p>" +
+            "<p><strong>Total Price:</strong> " + total + "</p>" +
+            "</div><p>Thank you for choosing us!</p></div></body></html>";
+    }
+    
+    private String constructCancelEmailHtml(String customerName, String pickup, String drop) {
+        return "<html><head><style>" +
+            "body { font-family: Arial, sans-serif; }" +
+            ".container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }" +
+            ".header { color: #ff4444; font-size: 24px; margin-bottom: 20px; }" +
+            ".details { margin: 15px 0; }" +
+            "</style></head>" +
+            "<body><div class='container'>" +
+            "<h2 class='header'>Booking Cancelled</h2>" +
+            "<p>Dear " + customerName + ",</p>" +
+            "<p>Your booking has been cancelled. Details:</p>" +
+            "<div class='details'>" +
+            "<p><strong>Pickup:</strong> " + pickup + "</p>" +
+            "<p><strong>Drop:</strong> " + drop + "</p>" +
+            "</div><p>Contact us for assistance.</p></div></body></html>";
+    }
 }
