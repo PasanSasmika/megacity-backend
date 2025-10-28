@@ -72,7 +72,7 @@ public class WebSecurityConfig {
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // Allow authentication endpoints
+                .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/api/category").permitAll() // Allow access to get all categories
                 .anyRequest().authenticated()); // Require authentication for other requests
 
